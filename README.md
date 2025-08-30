@@ -83,7 +83,7 @@ The entire application stack is containerized using Docker, allowing for a simpl
 
 1.  **Clone the Repository**
     ```bash
-    git clone [https://github.com/mostafa20220/company-management.git](https://github.com/mostafa20220/company-management-system.git)
+    git clone https://github.com/mostafa20220/company-management.git
     cd company-management
     ```
 
