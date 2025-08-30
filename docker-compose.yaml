@@ -1,0 +1,31 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${SQL_DATABASE}
+      POSTGRES_USER: ${SQL_USER}
+      POSTGRES_PASSWORD: ${SQL_PASSWORD}
+    volumes:
+      - cms-db:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  django:
+    build: .
+    container_name: django
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+
+
+volumes:
+  cms-db:

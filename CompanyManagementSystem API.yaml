@@ -1,0 +1,1639 @@
+openapi: 3.0.3
+info:
+  title: CompanyManagementSystem API
+  version: 1.0.0
+paths:
+  /api/v1/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/v1/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Logout'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logout'
+          description: ''
+  /api/v1/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: auth_profile_update
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: auth_profile_partial_update
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: auth_profile_destroy
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/auth/register/:
+    post:
+      operationId: auth_register_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'
+          description: ''
+  /api/v1/organizations/companies/:
+    get:
+      operationId: organizations_companies_list
+      description: |-
+        API endpoint that allows companies to be viewed or edited.
+        Only Admins can create, update, or delete companies.
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: The pagination cursor value.
+        schema:
+          type: string
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCompanyList'
+          description: ''
+    post:
+      operationId: organizations_companies_create
+      description: |-
+        API endpoint that allows companies to be viewed or edited.
+        Only Admins can create, update, or delete companies.
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Company'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+  /api/v1/organizations/companies/{id}/:
+    get:
+      operationId: organizations_companies_retrieve
+      description: |-
+        API endpoint that allows companies to be viewed or edited.
+        Only Admins can create, update, or delete companies.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this company.
+        required: true
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+    put:
+      operationId: organizations_companies_update
+      description: |-
+        API endpoint that allows companies to be viewed or edited.
+        Only Admins can create, update, or delete companies.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this company.
+        required: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Company'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+    patch:
+      operationId: organizations_companies_partial_update
+      description: |-
+        API endpoint that allows companies to be viewed or edited.
+        Only Admins can create, update, or delete companies.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this company.
+        required: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCompany'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+    delete:
+      operationId: organizations_companies_destroy
+      description: |-
+        API endpoint that allows companies to be viewed or edited.
+        Only Admins can create, update, or delete companies.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this company.
+        required: true
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/organizations/departments/:
+    get:
+      operationId: organizations_departments_list
+      description: |-
+        API endpoint that allows departments to be viewed or edited.
+        Only Admins can create, update, or delete departments.
+        Managers can view departments.
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: The pagination cursor value.
+        schema:
+          type: string
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDepartmentList'
+          description: ''
+    post:
+      operationId: organizations_departments_create
+      description: |-
+        API endpoint that allows departments to be viewed or edited.
+        Only Admins can create, update, or delete departments.
+        Managers can view departments.
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Department'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+  /api/v1/organizations/departments/{id}/:
+    get:
+      operationId: organizations_departments_retrieve
+      description: |-
+        API endpoint that allows departments to be viewed or edited.
+        Only Admins can create, update, or delete departments.
+        Managers can view departments.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    put:
+      operationId: organizations_departments_update
+      description: |-
+        API endpoint that allows departments to be viewed or edited.
+        Only Admins can create, update, or delete departments.
+        Managers can view departments.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Department'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    patch:
+      operationId: organizations_departments_partial_update
+      description: |-
+        API endpoint that allows departments to be viewed or edited.
+        Only Admins can create, update, or delete departments.
+        Managers can view departments.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartment'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    delete:
+      operationId: organizations_departments_destroy
+      description: |-
+        API endpoint that allows departments to be viewed or edited.
+        Only Admins can create, update, or delete departments.
+        Managers can view departments.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/organizations/employees/:
+    get:
+      operationId: organizations_employees_list
+      description: |-
+        API endpoint that allows employees to be viewed or edited.
+        Admins and Managers can create employees.
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: The pagination cursor value.
+        schema:
+          type: string
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEmployeeList'
+          description: ''
+    post:
+      operationId: organizations_employees_create
+      description: |-
+        API endpoint that allows employees to be viewed or edited.
+        Admins and Managers can create employees.
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+  /api/v1/organizations/employees/{id}/:
+    get:
+      operationId: organizations_employees_retrieve
+      description: |-
+        API endpoint that allows employees to be viewed or edited.
+        Admins and Managers can create employees.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee.
+        required: true
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+    put:
+      operationId: organizations_employees_update
+      description: |-
+        API endpoint that allows employees to be viewed or edited.
+        Admins and Managers can create employees.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee.
+        required: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+    patch:
+      operationId: organizations_employees_partial_update
+      description: |-
+        API endpoint that allows employees to be viewed or edited.
+        Admins and Managers can create employees.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee.
+        required: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployee'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+    delete:
+      operationId: organizations_employees_destroy
+      description: |-
+        API endpoint that allows employees to be viewed or edited.
+        Admins and Managers can create employees.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee.
+        required: true
+      tags:
+      - organizations
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/performance/reviews/:
+    get:
+      operationId: performance_reviews_list
+      description: API endpoint for managing the Employee Performance Review Cycle.
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: The pagination cursor value.
+        schema:
+          type: string
+      tags:
+      - performance
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPerformanceReviewList'
+          description: ''
+    post:
+      operationId: performance_reviews_create
+      description: API endpoint for managing the Employee Performance Review Cycle.
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+  /api/v1/performance/reviews/{id}/:
+    get:
+      operationId: performance_reviews_retrieve
+      description: API endpoint for managing the Employee Performance Review Cycle.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+    put:
+      operationId: performance_reviews_update
+      description: API endpoint for managing the Employee Performance Review Cycle.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+    patch:
+      operationId: performance_reviews_partial_update
+      description: API endpoint for managing the Employee Performance Review Cycle.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPerformanceReview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+    delete:
+      operationId: performance_reviews_destroy
+      description: API endpoint for managing the Employee Performance Review Cycle.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/performance/reviews/{id}/approve/:
+    post:
+      operationId: performance_reviews_approve_create
+      description: 'Transition: Under Approval -> Review Approved'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+  /api/v1/performance/reviews/{id}/provide_feedback/:
+    post:
+      operationId: performance_reviews_provide_feedback_create
+      description: 'Transition: Review Scheduled -> Feedback Provided'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+  /api/v1/performance/reviews/{id}/reject/:
+    post:
+      operationId: performance_reviews_reject_create
+      description: 'Transition: Under Approval -> Review Rejected'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+  /api/v1/performance/reviews/{id}/schedule/:
+    post:
+      operationId: performance_reviews_schedule_create
+      description: 'Transition: Pending Review -> Review Scheduled'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+  /api/v1/performance/reviews/{id}/submit_for_approval/:
+    post:
+      operationId: performance_reviews_submit_for_approval_create
+      description: 'Transition: Feedback Provided -> Under Approval'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this performance review.
+        required: true
+      tags:
+      - performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerformanceReview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReview'
+          description: ''
+  /api/v1/projects/:
+    get:
+      operationId: projects_list
+      description: |-
+        API endpoint that allows projects to be viewed or edited.
+        Creation, update, and deletion are restricted to Managers and Admins.
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: The pagination cursor value.
+        schema:
+          type: string
+      tags:
+      - projects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProjectList'
+          description: ''
+    post:
+      operationId: projects_create
+      description: |-
+        API endpoint that allows projects to be viewed or edited.
+        Creation, update, and deletion are restricted to Managers and Admins.
+      tags:
+      - projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+  /api/v1/projects/{id}/:
+    get:
+      operationId: projects_retrieve
+      description: |-
+        API endpoint that allows projects to be viewed or edited.
+        Creation, update, and deletion are restricted to Managers and Admins.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - projects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    put:
+      operationId: projects_update
+      description: |-
+        API endpoint that allows projects to be viewed or edited.
+        Creation, update, and deletion are restricted to Managers and Admins.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: projects_partial_update
+      description: |-
+        API endpoint that allows projects to be viewed or edited.
+        Creation, update, and deletion are restricted to Managers and Admins.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    delete:
+      operationId: projects_destroy
+      description: |-
+        API endpoint that allows projects to be viewed or edited.
+        Creation, update, and deletion are restricted to Managers and Admins.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - projects
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        number_of_departments:
+          type: integer
+          readOnly: true
+        number_of_employees:
+          type: integer
+          readOnly: true
+        number_of_projects:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - name
+      - number_of_departments
+      - number_of_employees
+      - number_of_projects
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        company:
+          type: integer
+        company_name:
+          type: string
+          readOnly: true
+        number_of_employees:
+          type: integer
+          readOnly: true
+        number_of_projects:
+          type: integer
+          readOnly: true
+      required:
+      - company
+      - company_name
+      - id
+      - name
+      - number_of_employees
+      - number_of_projects
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/User'
+        company:
+          type: integer
+        department:
+          type: integer
+        mobile_number:
+          type: string
+          nullable: true
+          maxLength: 20
+        address:
+          type: string
+          nullable: true
+        designation:
+          type: string
+          maxLength: 100
+        hired_on:
+          type: string
+          format: date
+          nullable: true
+        days_employed:
+          type: string
+          readOnly: true
+      required:
+      - company
+      - days_employed
+      - department
+      - designation
+      - id
+      - user
+    EmployeeBrief:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        designation:
+          type: string
+          maxLength: 100
+      required:
+      - designation
+      - full_name
+      - id
+    Logout:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - refresh
+    PaginatedCompanyList:
+      type: object
+      required:
+      - results
+      properties:
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cD00ODY%3D"
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+    PaginatedDepartmentList:
+      type: object
+      required:
+      - results
+      properties:
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cD00ODY%3D"
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Department'
+    PaginatedEmployeeList:
+      type: object
+      required:
+      - results
+      properties:
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cD00ODY%3D"
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+    PaginatedPerformanceReviewList:
+      type: object
+      required:
+      - results
+      properties:
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cD00ODY%3D"
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerformanceReview'
+    PaginatedProjectList:
+      type: object
+      required:
+      - results
+      properties:
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cD00ODY%3D"
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+    PatchedCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        number_of_departments:
+          type: integer
+          readOnly: true
+        number_of_employees:
+          type: integer
+          readOnly: true
+        number_of_projects:
+          type: integer
+          readOnly: true
+    PatchedDepartment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        company:
+          type: integer
+        company_name:
+          type: string
+          readOnly: true
+        number_of_employees:
+          type: integer
+          readOnly: true
+        number_of_projects:
+          type: integer
+          readOnly: true
+    PatchedEmployee:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/User'
+        company:
+          type: integer
+        department:
+          type: integer
+        mobile_number:
+          type: string
+          nullable: true
+          maxLength: 20
+        address:
+          type: string
+          nullable: true
+        designation:
+          type: string
+          maxLength: 100
+        hired_on:
+          type: string
+          format: date
+          nullable: true
+        days_employed:
+          type: string
+          readOnly: true
+    PatchedPerformanceReview:
+      type: object
+      description: Main serializer for the PerformanceReview model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        employee:
+          type: integer
+        employee_name:
+          type: string
+          readOnly: true
+        state:
+          allOf:
+          - $ref: '#/components/schemas/StateEnum'
+          readOnly: true
+        state_display:
+          type: string
+          readOnly: true
+        feedback:
+          type: string
+        review_date:
+          type: string
+          format: date-time
+          nullable: true
+    PatchedProject:
+      type: object
+      description: Serializer for the Project model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        company:
+          type: integer
+        department:
+          type: integer
+        assigned_employees:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        assigned_employees_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeBrief'
+          readOnly: true
+    PerformanceReview:
+      type: object
+      description: Main serializer for the PerformanceReview model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        employee:
+          type: integer
+        employee_name:
+          type: string
+          readOnly: true
+        state:
+          allOf:
+          - $ref: '#/components/schemas/StateEnum'
+          readOnly: true
+        state_display:
+          type: string
+          readOnly: true
+        feedback:
+          type: string
+        review_date:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - employee
+      - employee_name
+      - id
+      - state
+      - state_display
+    Project:
+      type: object
+      description: Serializer for the Project model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        company:
+          type: integer
+        department:
+          type: integer
+        assigned_employees:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        assigned_employees_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeBrief'
+          readOnly: true
+      required:
+      - assigned_employees_details
+      - company
+      - department
+      - end_date
+      - id
+      - name
+      - start_date
+    Register:
+      type: object
+      properties:
+        username:
+          type: string
+          nullable: true
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+    RoleEnum:
+      enum:
+      - ADMIN
+      - MANAGER
+      - EMPLOYEE
+      type: string
+      description: |-
+        * `ADMIN` - Admin
+        * `MANAGER` - Manager
+        * `EMPLOYEE` - Employee
+    StateEnum:
+      enum:
+      - PENDING
+      - SCHEDULED
+      - FEEDBACK
+      - APPROVAL
+      - APPROVED
+      - REJECTED
+      type: string
+      description: |-
+        * `PENDING` - Pending Review
+        * `SCHEDULED` - Review Scheduled
+        * `FEEDBACK` - Feedback Provided
+        * `APPROVAL` - Under Approval
+        * `APPROVED` - Review Approved
+        * `REJECTED` - Review Rejected
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        username:
+          type: string
+          nullable: true
+          maxLength: 50
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - email
+      - id
+      - role
+  securitySchemes:
+    jwtAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "J"
